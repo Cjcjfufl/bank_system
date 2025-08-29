@@ -5,7 +5,7 @@ import sys
 
 VERSION_FILE = "version.txt"
 BANK_FILE = "bank_system.py"
-UPDATE_URL = UPDATE_URL = "https://raw.githubusercontent.com/WenJieTan/bank_system/main/updates.json"
+UPDATE_URL = "https://raw.githubusercontent.com/WenJieTan/bank_system/main/updates.json"
 
 def get_current_version():
     if not os.path.exists(VERSION_FILE):
@@ -47,4 +47,5 @@ if __name__ == "__main__":
         os.system(f"python {BANK_FILE}")
     else:
         print("没有找到银行系统代码。")
+
 
