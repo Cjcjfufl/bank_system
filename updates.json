@@ -1,0 +1,49 @@
+import requests
+import json
+import os
+import sys
+
+VERSION_FILE = "version.txt"
+BANK_FILE = "bank_system.py"
+UPDATE_URL = "https://raw.githubusercontent.com/你的仓库/bank_system/main/updates.json"
+
+def get_current_version():
+    if not os.path.exists(VERSION_FILE):
+        return "0.0.0"
+    with open(VERSION_FILE, "r") as f:
+        return f.read().strip()
+
+def set_current_version(version):
+    with open(VERSION_FILE, "w") as f:
+        f.write(version)
+
+def check_update():
+    try:
+        response = requests.get(UPDATE_URL, timeout=5)
+        update_data = response.json()
+    except Exception as e:
+        print("检查更新失败:", e)
+        return
+
+    latest_version = update_data["latest"]
+    notes = update_data["notes"]
+    new_code = update_data["code"]
+
+    current_version = get_current_version()
+
+    if latest_version != current_version:
+        print(f"发现新版本 {latest_version}，更新内容：{notes}")
+        with open(BANK_FILE, "w", encoding="utf-8") as f:
+            f.write(new_code)
+        set_current_version(latest_version)
+        print("更新完成，请重新运行程序。")
+        sys.exit()
+    else:
+        print(f"当前已是最新版本 {current_version}")
+
+if __name__ == "__main__":
+    check_update()
+    if os.path.exists(BANK_FILE):
+        os.system(f"python {BANK_FILE}")
+    else:
+        print("没有找到银行系统代码。")
